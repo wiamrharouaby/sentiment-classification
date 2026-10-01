@@ -186,6 +186,4 @@ Réponse :
 
 **Wiam Rharouaby** — [GitHub](https://github.com/wiamrharouaby)
 
-## 📄 Licence
-
-Ce projet est distribué sous licence MIT (ajoutez un fichier `LICENSE` à la racine du dépôt).
+ 
