@@ -1,4 +1,4 @@
-# 🧠 API de Classification de Sentiment (Français / Anglais)
+# 🧠 Pipeline MLOps complet pour la classification de texte (Français / Anglais)
 
 API REST de classification de sentiment (positif / négatif) construite avec **FastAPI** et un modèle **SVM + TF-IDF**, avec authentification JWT, interface web et pipeline MLOps complet (prétraitement, entraînement, évaluation, déploiement Docker).
 
