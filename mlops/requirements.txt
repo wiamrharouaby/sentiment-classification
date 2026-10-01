@@ -1,0 +1,26 @@
+# Dépendances principales avec versions compatibles
+numpy>=1.24.0,<1.25.0
+scipy>=1.10.0,<1.11.0
+scikit-learn>=1.2.0,<1.3.0
+pandas>=1.5.0,<1.6.0
+fastapi>=0.78.0,<0.79.0
+uvicorn>=0.17.0,<0.18.0
+pydantic>=1.9.0,<1.10.0
+python-jose[cryptography]>=3.3.0,<3.4.0
+python-multipart>=0.0.5,<0.0.6
+dvc>=2.10.0,<2.11.0
+mlflow>=1.26.0,<1.27.0
+prometheus-client>=0.14.0,<0.15.0
+
+# Dépendances pour le traitement du texte
+nltk>=3.7,<3.8
+
+# Dépendances pour les tests
+pytest>=7.1.0,<7.2.0
+pytest-cov>=3.0.0,<3.1.0
+
+# Dépendances pour le développement
+black>=22.3.0,<22.4.0
+isort>=5.10.0,<5.11.0
+mypy>=0.950,<0.960
+flake8>=4.0.0,<4.1.0

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inscription</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+            padding: 10px;
+            background-color: #ffebee;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        .success {
+            color: green;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Inscription</h1>
+    
+    <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input type="text" id="username" placeholder="Choisissez un nom d'utilisateur">
+    </div>
+    
+    <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" placeholder="Choisissez un mot de passe">
+    </div>
+    
+    <div class="form-group">
+        <label for="confirm">Confirmer le mot de passe</label>
+        <input type="password" id="confirm" placeholder="Confirmez votre mot de passe">
+    </div>
+    
+    <div class="form-group">
+        <label for="email">Email (optionnel)</label>
+        <input type="email" id="email" placeholder="Entrez votre email">
+    </div>
+    
+    <div class="form-group">
+        <label for="fullname">Nom complet (optionnel)</label>
+        <input type="text" id="fullname" placeholder="Entrez votre nom complet">
+    </div>
+    
+    <button onclick="register()">S'inscrire</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        async function register() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm').value;
+            const email = document.getElementById('email').value;
+            const fullName = document.getElementById('fullname').value;
+            const resultDiv = document.getElementById('result');
+            
+            // Validation de base
+            if (!username || !password || !confirm) {
+                resultDiv.innerHTML = '<div class="error">Veuillez remplir tous les champs obligatoires</div>';
+                return;
+            }
+            
+            if (password !== confirm) {
+                resultDiv.innerHTML = '<div class="error">Les mots de passe ne correspondent pas</div>';
+                return;
+            }
+            
+            try {
+                // Créer l'objet de données
+                const userData = {
+                    username: username,
+                    password: password
+                };
+                
+                // Ajouter les champs optionnels s'ils sont remplis
+                if (email) userData.email = email;
+                if (fullName) userData.full_name = fullName;
+                
+                // Afficher les données pour le débogage
+                console.log('Données envoyées:', userData);
+                
+                // Envoyer la requête
+                const response = await fetch('http://localhost:8000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                // Récupérer la réponse
+                const responseText = await response.text();
+                console.log('Réponse brute:', responseText);
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(responseText);
+                        resultDiv.innerHTML = `<div class="success">${data.message || 'Inscription réussie!'}</div>`;
+                    } catch (e) {
+                        resultDiv.innerHTML = '<div class="success">Inscription réussie!</div>';
+                    }
+                } else {
+                    try {
+                        const error = JSON.parse(responseText);
+                        resultDiv.innerHTML = `<div class="error">Erreur: ${error.detail || 'Échec de l\'inscription'}</div>`;
+                    } catch (e) {
+                        resultDiv.innerHTML = `<div class="error">Erreur: ${responseText || 'Échec de l\'inscription'}</div>`;
+                    }
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+                console.error('Erreur complète:', error);
+            }
+        }
+    </script>
+</body>
+</html>

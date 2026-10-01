@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test de l'API de Classification</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        textarea { width: 100%; height: 150px; margin-bottom: 10px; padding: 10px; }
+        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        #result { margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; display: none; }
+        .positive { background-color: #e8f5e9; }
+        .negative { background-color: #ffebee; }
+    </style>
+</head>
+<body>
+    <h1>Test de l'API de Classification de Texte</h1>
+    <p>Entrez un texte ci-dessous pour le classifier:</p>
+    <textarea id="textInput" placeholder="Entrez votre texte ici..."></textarea>
+    <button onclick="classifyText()">Classifier</button>
+    <div id="result"></div>
+
+    <script>
+        async function classifyText() {
+            const text = document.getElementById('textInput').value;
+            if (!text) {
+                alert('Veuillez entrer un texte');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/classify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la classification');
+                }
+
+                const data = await response.json();
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+                resultDiv.className = data.sentiment === 'positive' ? 'positive' : 'negative';
+                resultDiv.innerHTML = `
+                    <h3>Résultat:</h3>
+                    <p><strong>Sentiment:</strong> ${data.sentiment === 'positive' ? 'Positif' : 'Négatif'}</p>
+                    <p><strong>Confiance:</strong> ${(data.confidence * 100).toFixed(2)}%</p>
+                `;
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue lors de la classification');
+            }
+        }
+    </script>
+</body>
+</html>

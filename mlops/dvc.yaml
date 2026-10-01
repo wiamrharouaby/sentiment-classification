@@ -1,0 +1,30 @@
+stages:
+  preprocess:
+    cmd: python -m mlops.preprocessing.preprocess_csv --input data/raw/reviews.csv --output data/processed/reviews_processed.csv --lowercase --remove-punctuation
+    deps:
+      - data/raw/reviews.csv
+      - mlops/preprocessing/preprocess_csv.py
+    outs:
+      - data/processed/reviews_processed.csv
+  
+  train:
+    cmd: python -m mlops.main train --data data/processed/reviews_processed.csv --model-output models/svm_model.pkl --model-type svm
+    deps:
+      - data/processed/reviews_processed.csv
+      - mlops/main.py
+      - mlops/models/model_factory.py
+    outs:
+      - models/svm_model.pkl
+    metrics:
+      - metrics/train_metrics.json:
+          cache: false
+  
+  evaluate:
+    cmd: python -m mlops.evaluation.evaluate --model models/svm_model.pkl --data data/processed/reviews_processed.csv --output metrics/evaluation_metrics.json
+    deps:
+      - models/svm_model.pkl
+      - data/processed/reviews_processed.csv
+      - mlops/evaluation/evaluate.py
+    metrics:
+      - metrics/evaluation_metrics.json:
+          cache: false
